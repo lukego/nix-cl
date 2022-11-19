@@ -16,7 +16,7 @@
     {
       packages = { inherit (lisps) abcl ccl clasp clisp ecl sbcl; };
       devShells.default = callWithLisps ./shell.nix;
-      hydraJobs = lisps.sbcl.pkgs;
+      hydraJobs = pkgs.lib.filterAttrs (k: v: pkgs.lib.strings.hasPrefix "k" k) lisps.sbcl.pkgs;
     });
 
 }
