@@ -5,7 +5,7 @@
   inputs.dev.url = "github:uthar/dev";
 
   outputs = { self, dev, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (system:
     let
       nixpkgs = dev.inputs.nixpkgs;
       pkgs = nixpkgs.legacyPackages.${system};
@@ -13,10 +13,10 @@
       callWithLisps = x: pkgs.callPackage x { inherit (devpkgs) abcl clasp sbcl; };
       lisps = callWithLisps ./.;
     in
-    {
+    rec {
       packages = { inherit (lisps) abcl ccl clasp clisp ecl sbcl; };
       devShells.default = callWithLisps ./shell.nix;
-      hydraJobs = pkgs.lib.filterAttrs (k: v: pkgs.lib.strings.hasPrefix "k" k) lisps.sbcl.pkgs;
+      hydraJobs = packages.sbcl.pkgs;
     });
 
 }
