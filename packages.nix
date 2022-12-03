@@ -413,6 +413,43 @@ let
     ];
   };
   
+  trial = build-asdf-system {
+    pname = "trial";
+    version = "20221201";
+    src = pkgs.fetchFromGitHub {
+      owner = "Shirakumo";
+      repo = "trial";
+      rev = "5219b7832417ab8e999930fe5a9647dfb6c29852";
+      hash = "sha256-J8No3Kx5PoiUFQ2ybyUnlAIuVfTWnfNhbqTBlw0bEoc=";
+    };
+    asds = [ "trial"
+             "backends/sdl2/trial-sdl2"
+             "backends/glfw/trial-glfw"
+             #"backends/qt/trial-qt"
+             #"backends/glop/trial-glop"
+           ];
+    systems = [ "trial"
+                "trial-sdl2"
+                "trial-glfw"
+                #"trial-qt"
+                #"trial-glop"
+              ];
+    lispLibs = with super; [
+      alexandria atomics
+      _3d-vectors _3d-matrices _3d-quaternions _3d-transforms
+      verbose deploy closer-mop
+      trivial-main-thread trivial-garbage trivial-indent trivial-extensible-sequences
+      bordeaux-threads cl-opengl cl-gamepad cl-ppcre pathname-utils
+      documentation-utils for flow glsl-toolkit fast-io ieee-floats
+      float-features lquery static-vectors mmap messagebox nibbles
+      form-fiddle lambda-fiddle jsown zpng system-locale language-codes
+      # glop qtools qtcore qtgui qtopengl
+      sdl2 cl-glfw3
+    ];
+    nativeBuildInputs = [ pkgs.xorg.libX11 pkgs.libevdev ];
+    nativeLibs        = [ pkgs.xorg.libX11 pkgs.libevdev ];
+  };
+
   });
 
 in packages
