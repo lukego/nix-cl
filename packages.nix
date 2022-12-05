@@ -451,11 +451,29 @@ let
   };
 
   vk = super.vk.overrideLispAttrs (o:
-    {
+    rec {
       # work around heap exhaustion during compilation
       flags = "--dynamic-space-size 4096";
-      nativeLibs = [ pkgs.vulkan-loader ];
-    });
+      nativeLibs = [ pkgs.vulkan-loader pkgs.vulkan-validation-layers ];
+      buildInputs = nativeLibs;
+  });
+
+  shadercl = build-asdf-system {
+    pname = "shadercl";
+    version = "20210721";
+    src = pkgs.fetchFromGitHub {
+      owner = "JolifantoBambla";
+      repo = "shadercl";
+      rev = "e8d0411cd8a33efea998d3619b943cc88d7d0011";
+      hash = "sha256-GJBqQ1IEKJvhNColemyS2PpTaxsD0Q+hLSZGXbasgDQ=";
+    };
+    asds = "shaderc";
+    systems = [ "shaderc" "shaderc/tests"  ];
+    lispLibs = with super; [ alexandria cffi rove ];
+    nativeBuildInputs = [ pkgs.shaderc ];
+    nativeLibs        = [ pkgs.shaderc ];
+
+  };
 
   });
 
