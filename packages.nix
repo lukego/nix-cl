@@ -450,6 +450,13 @@ let
     nativeLibs        = [ pkgs.xorg.libX11 pkgs.libevdev ];
   };
 
+  vk = super.vk.overrideLispAttrs (o:
+    {
+      # work around heap exhaustion during compilation
+      flags = "--dynamic-space-size 4096";
+      nativeLibs = [ pkgs.vulkan-loader ];
+    });
+
   });
 
 in packages
