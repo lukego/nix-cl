@@ -2,15 +2,16 @@
 
   description = "Utilities for packaging ASDF Common Lisp systems";
 
-  #inputs.dev.url = "github:uthar/dev";
-  inputs.nixpkgs.url = "github:lukego/nixpkgs/shaderc-2022.4";
+  inputs.dev.url = "github:lukego/dev";
+  #inputs.nixpkgs.url = "github:lukego/nixpkgs/shaderc-2022.4";
 
-  outputs = { self, flake-utils, nixpkgs }:
+  outputs = { self, flake-utils, dev }:
     flake-utils.lib.eachDefaultSystem (system:
     let
+      nixpkgs = dev.inputs.nixpkgs;
       pkgs = nixpkgs.legacyPackages.${system};
-      #devpkgs = nixpkgs.outputs.packages.${system};
-      callWithLisps = x: pkgs.callPackage x { inherit (nixpkgs) abcl clasp sbcl; };
+      devpkgs = dev.outputs.packages.${system};
+      callWithLisps = x: pkgs.callPackage x { inherit (devpkgs) abcl clasp sbcl; };
       lisps = callWithLisps ./.;
     in
     {
