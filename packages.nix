@@ -323,6 +323,7 @@ let
     nativeBuildInputs = [ pkgs.gfortran ];
     nativeLibs = [ pkgs.openblas ];
     patches = [ ./patches/magicl-dont-build-fortran-twice.patch ];
+    flags = "--dynamic-space-size 16384";
   };
 
   cl-gtk4 = build-asdf-system {
@@ -453,7 +454,7 @@ let
   vk = super.vk.overrideLispAttrs (o:
     rec {
       # work around heap exhaustion during compilation
-      flags = "--dynamic-space-size 4096";
+      flags = "--dynamic-space-size 8192";
       nativeLibs = [ pkgs.vulkan-loader pkgs.vulkan-validation-layers ];
       buildInputs = nativeLibs;
   });
